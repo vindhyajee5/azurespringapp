@@ -50,6 +50,7 @@ jobs:
       - name: Deploy to Azure spring Service
         uses: azure/webapps-deploy@v2
         with:
+          azure-subscription: 7860472d-2203-4ceb-a700-63e0b4227ed9
           action: Deploy
           service-name: firstapp
           app-name: firstspringapps
