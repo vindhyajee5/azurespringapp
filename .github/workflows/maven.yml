@@ -29,3 +29,29 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn clean install -DskipTests
+    - name: Upload Artifacct for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: firstspringapps
+        path: ${{ github.workspace }}/target/*.jar
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: firstspringapps
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy to Azure spring Service
+        uses: azure/webapps-deploy@v2
+        with:
+          action: Deploy
+          service-name: firstapp
+          app-name: firstspringapps
+          use-staging-deployment: false
+          package: '*.jar'
